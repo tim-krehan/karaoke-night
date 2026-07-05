@@ -53,3 +53,21 @@ Statt Bildern werden ausschließlich Emojis verwendet.
   "count": 1,
   "status": "requested"
 }
+```
+
+## CSV‑Export
+
+Das Admin‑Panel enthält einen Button **„CSV Export ✨“**.
+
+Der Export erzeugt eine Datei:
+
+`songs_export.csv`
+
+Die Datei enthält alle Felder:
+
+- title
+- interpret
+- count
+- status
+
+Der Download wird automatisch ausgelöst.

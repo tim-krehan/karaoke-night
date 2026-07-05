@@ -56,6 +56,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['index'])) {
         <nav class="nav">
             <a href="index.php" class="nav-link">Zur Request-Seite 🎤</a>
             <a href="logout.php" class="nav-link">Logout 🚪</a>
+            <a href="export.php" class="nav-link">CSV Export ✨</a>
         </nav>
     </header>
 
