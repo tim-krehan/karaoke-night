@@ -1,4 +1,4 @@
-/* style.css - 90s Yankees Karaoke Style with mobile optimization */
+/* style.css - 90s Yankees Karaoke Style with improved mobile table layout */
 
 body.yankees-body {
     background: linear-gradient(90deg, #001f3f, #003366, #001f3f);
@@ -84,7 +84,6 @@ body.yankees-body {
 
 .search-input,
 .login-input,
-.rate-input,
 .admin-input {
     padding: 8px;
     border: 4px solid #ff4136;
@@ -95,7 +94,6 @@ body.yankees-body {
 
 .search-input:focus,
 .login-input:focus,
-.rate-input:focus,
 .admin-input:focus {
     outline: none;
     border-color: #ffdc00;
@@ -139,31 +137,40 @@ body.yankees-body {
     overflow-x: auto;
 }
 
-.song-table {
+/* ----------------------------- */
+/* DESKTOP TABLES                */
+/* ----------------------------- */
+
+.song-table,
+.admin-table {
     width: 100%;
     border-collapse: collapse;
     margin-top: 10px;
     background-color: #001f3f;
-    min-width: 400px;
 }
 
 .song-table th,
-.song-table td {
+.song-table td,
+.admin-table th,
+.admin-table td {
     border: 3px solid #ffffff;
     padding: 8px;
     text-align: left;
 }
 
-.song-table th {
+.song-table th,
+.admin-table th {
     background-color: #0074d9;
     color: #ffffff;
 }
 
-.song-table tr:nth-child(even) {
+.song-table tr:nth-child(even),
+.admin-table tr:nth-child(even) {
     background-color: #000022;
 }
 
-.song-table tr:nth-child(odd) {
+.song-table tr:nth-child(odd),
+.admin-table tr:nth-child(odd) {
     background-color: #000044;
 }
 
@@ -220,12 +227,57 @@ body.yankees-body {
     100% { opacity: 1; }
 }
 
-/* Mobile optimization */
-@media (max-width: 600px) {
-    .page-container {
-        margin: 10px;
+/* ----------------------------- */
+/* MOBILE OPTIMIZED TABLES       */
+/* ----------------------------- */
+
+@media (max-width: 700px) {
+
+    /* Turn tables into stacked cards */
+    .song-table thead,
+    .admin-table thead {
+        display: none;
+    }
+
+    .song-table tr,
+    .admin-table tr {
+        display: block;
+        margin-bottom: 15px;
+        border: 3px solid #ffffff;
         padding: 10px;
-        border-width: 5px;
+        background-color: #000044;
+    }
+
+    .song-table td,
+    .admin-table td {
+        display: flex;
+        justify-content: space-between;
+        padding: 6px 4px;
+        border: none;
+        font-size: 0.95em;
+    }
+
+    /* Add labels before each value */
+    .song-table td::before,
+    .admin-table td::before {
+        content: attr(data-label);
+        font-weight: bold;
+        color: #ffdc00;
+        margin-right: 10px;
+    }
+
+    /* Admin inputs */
+    .admin-table input,
+    .admin-table select {
+        width: 60%;
+        font-size: 1em;
+        padding: 6px;
+    }
+
+    /* Buttons */
+    .btn {
+        padding: 8px 10px;
+        font-size: 0.9em;
     }
 
     .title {
@@ -236,22 +288,9 @@ body.yankees-body {
         font-size: 1.4em;
     }
 
-    .nav-link,
-    .nav-link-inline {
+    .nav-link {
+        font-size: 0.9em;
         padding: 4px 8px;
-        margin: 2px;
-        font-size: 0.9em;
-    }
-
-    .song-table th,
-    .song-table td {
-        padding: 6px;
-        font-size: 0.9em;
-    }
-
-    .btn {
-        padding: 8px 10px;
-        font-size: 0.9em;
     }
 
     .yankees-marquee {

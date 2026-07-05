@@ -1,7 +1,7 @@
 <?php
 session_start();
 
-if (!isset($_SESSION['is_admin']) || $_SESSION['is_admin'] !== true) {
+if (!($_SESSION['is_admin'] ?? false)) {
     header('Location: login.php');
     exit;
 }
@@ -11,27 +11,27 @@ $songsFile = __DIR__ . '/songs.json';
 function loadSongs($file)
 {
     if (!file_exists($file)) {
-        file_put_contents($file, json_encode([], JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE));
+        file_put_contents($file, json_encode([], JSON_PRETTY_PRINT));
     }
-    return json_decode(file_get_contents($file), true);
+    $data = json_decode(file_get_contents($file), true);
+    return is_array($data) ? $data : [];
 }
 
 function saveSongs($file, $songs)
 {
-    file_put_contents($file, json_encode($songs, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE));
+    file_put_contents($file, json_encode($songs, JSON_PRETTY_PRINT));
 }
 
 $songs = loadSongs($songsFile);
 $message = '';
 
-if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['index'])) {
-    $idx = (int)$_POST['index'];
-    if (isset($songs[$idx])) {
-        $songs[$idx]['title'] = trim($_POST['title']);
-        $songs[$idx]['interpret'] = trim($_POST['interpret']);
-        $songs[$idx]['count'] = (int)$_POST['count'];
-        $status = trim($_POST['status']);
-        $songs[$idx]['status'] = ($status === 'ok' || $status === 'requested') ? $status : 'requested';
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    $i = (int)$_POST['index'];
+    if (isset($songs[$i])) {
+        $songs[$i]['title'] = trim($_POST['title']);
+        $songs[$i]['interpret'] = trim($_POST['interpret']);
+        $songs[$i]['count'] = (int)$_POST['count'];
+        $songs[$i]['status'] = ($_POST['status'] === 'ok') ? 'ok' : 'requested';
 
         saveSongs($songsFile, $songs);
         $message = 'Songdaten aktualisiert ✨';
@@ -50,9 +50,8 @@ $bottomBanner = getenv('BOTTOM_BANNER_TEXT') ?: '✨ Admin Power ✨ Manage Song
     <link rel="stylesheet" href="style.css">
 </head>
 <body class="yankees-body">
-<marquee class="yankees-marquee" behavior="scroll" direction="left">
-    <?php echo htmlspecialchars($topBanner); ?>
-</marquee>
+
+<marquee class="yankees-marquee"><?php echo htmlspecialchars($topBanner); ?></marquee>
 
 <div class="page-container">
     <header class="header">
@@ -67,43 +66,60 @@ $bottomBanner = getenv('BOTTOM_BANNER_TEXT') ?: '✨ Admin Power ✨ Manage Song
     <main>
         <section class="admin-section">
             <h2 class="section-title">Songverwaltung 🎶</h2>
+
             <?php if ($message): ?>
                 <p class="info-message"><?php echo htmlspecialchars($message); ?></p>
             <?php endif; ?>
 
             <div class="table-wrapper">
-                <table class="song-table admin-table">
+                <table class="admin-table">
                     <thead>
-                    <tr>
-                        <th>#</th>
-                        <th>Songtitel 🎵</th>
-                        <th>Interpret 🎤</th>
-                        <th>Count 🔢</th>
-                        <th>Status ✅</th>
-                        <th>Aktion ✨</th>
-                    </tr>
+                        <tr>
+                            <th>#</th>
+                            <th>Songtitel 🎵</th>
+                            <th>Interpret 🎤</th>
+                            <th>Count 🔢</th>
+                            <th>Status ✅</th>
+                            <th>Aktion ✨</th>
+                        </tr>
                     </thead>
                     <tbody>
-                    <?php foreach ($songs as $index => $song): ?>
-                        <tr>
-                            <form method="post" action="admin.php">
-                                <td><?php echo $index; ?><input type="hidden" name="index" value="<?php echo $index; ?>"></td>
-                                <td><input type="text" name="title" value="<?php echo htmlspecialchars($song['title']); ?>" class="admin-input"></td>
-                                <td><input type="text" name="interpret" value="<?php echo htmlspecialchars($song['interpret']); ?>" class="admin-input"></td>
-                                <td><input type="number" name="count" value="<?php echo (int)$song['count']; ?>" class="admin-input"></td>
-                                <td>
-                                    <select name="status" class="admin-input">
-                                        <option value="requested" <?php echo $song['status']==='requested'?'selected':''; ?>>requested</option>
-                                        <option value="ok" <?php echo $song['status']==='ok'?'selected':''; ?>>ok</option>
-                                    </select>
-                                </td>
-                                <td><button type="submit" class="btn btn-admin-update">Speichern ✨</button></td>
-                            </form>
-                        </tr>
-                    <?php endforeach; ?>
+                        <?php foreach ($songs as $i => $song): ?>
+                            <tr>
+                                <form method="post">
+                                    <td data-label="#"> <?php echo $i; ?>
+                                        <input type="hidden" name="index" value="<?php echo $i; ?>">
+                                    </td>
+
+                                    <td data-label="Songtitel 🎵">
+                                        <input class="admin-input" type="text" name="title" value="<?php echo htmlspecialchars($song['title']); ?>">
+                                    </td>
+
+                                    <td data-label="Interpret 🎤">
+                                        <input class="admin-input" type="text" name="interpret" value="<?php echo htmlspecialchars($song['interpret']); ?>">
+                                    </td>
+
+                                    <td data-label="Count 🔢">
+                                        <input class="admin-input" type="number" name="count" value="<?php echo (int)$song['count']; ?>">
+                                    </td>
+
+                                    <td data-label="Status ✅">
+                                        <select class="admin-input" name="status">
+                                            <option value="requested" <?php echo $song['status']==='requested'?'selected':''; ?>>requested</option>
+                                            <option value="ok" <?php echo $song['status']==='ok'?'selected':''; ?>>ok</option>
+                                        </select>
+                                    </td>
+
+                                    <td data-label="Aktion ✨">
+                                        <button class="btn btn-admin-update">Speichern ✨</button>
+                                    </td>
+                                </form>
+                            </tr>
+                        <?php endforeach; ?>
                     </tbody>
                 </table>
             </div>
+
         </section>
     </main>
 
@@ -111,5 +127,6 @@ $bottomBanner = getenv('BOTTOM_BANNER_TEXT') ?: '✨ Admin Power ✨ Manage Song
         <p><?php echo htmlspecialchars($bottomBanner); ?></p>
     </footer>
 </div>
+
 </body>
 </html>

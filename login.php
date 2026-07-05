@@ -1,10 +1,7 @@
 <?php
-// login.php - Admin login page
-
 session_start();
 
-// Already logged in → redirect
-if (isset($_SESSION['is_admin']) && $_SESSION['is_admin'] === true) {
+if ($_SESSION['is_admin'] ?? false) {
     header('Location: admin.php');
     exit;
 }
@@ -13,14 +10,12 @@ $adminPassword = getenv('ADMIN_PASSWORD') ?: 'changeme';
 $error = '';
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $password = $_POST['password'] ?? '';
-    if ($password === $adminPassword) {
+    if (($_POST['password'] ?? '') === $adminPassword) {
         $_SESSION['is_admin'] = true;
         header('Location: admin.php');
         exit;
-    } else {
-        $error = 'Falsches Passwort ✨';
     }
+    $error = 'Falsches Passwort ✨';
 }
 
 $topBanner = getenv('TOP_BANNER_TEXT') ?: '✨ ADMIN LOGIN ✨ ONLY TRUE KARAOKE CAPTAINS MAY ENTER ✨';
@@ -35,9 +30,8 @@ $bottomBanner = getenv('BOTTOM_BANNER_TEXT') ?: '✨ Passwortgeschütztes Admin-
     <link rel="stylesheet" href="style.css">
 </head>
 <body class="yankees-body">
-<marquee class="yankees-marquee" behavior="scroll" direction="left">
-    <?php echo htmlspecialchars($topBanner); ?>
-</marquee>
+
+<marquee class="yankees-marquee"><?php echo htmlspecialchars($topBanner); ?></marquee>
 
 <div class="page-container">
     <header class="header">
@@ -50,13 +44,15 @@ $bottomBanner = getenv('BOTTOM_BANNER_TEXT') ?: '✨ Passwortgeschütztes Admin-
     <main>
         <section class="login-section">
             <h2 class="section-title">Passwort eingeben 🔑</h2>
+
             <?php if ($error): ?>
                 <p class="error-message"><?php echo htmlspecialchars($error); ?></p>
             <?php endif; ?>
-            <form method="post" action="login.php" class="login-form">
-                <label for="password" class="login-label">Admin-Passwort:</label>
-                <input type="password" id="password" name="password" class="login-input">
-                <button type="submit" class="btn btn-login">Login ✨</button>
+
+            <form method="post" class="login-form">
+                <label class="login-label">Admin-Passwort:</label>
+                <input type="password" name="password" class="login-input">
+                <button class="btn btn-login">Login ✨</button>
             </form>
         </section>
     </main>
@@ -65,5 +61,6 @@ $bottomBanner = getenv('BOTTOM_BANNER_TEXT') ?: '✨ Passwortgeschütztes Admin-
         <p><?php echo htmlspecialchars($bottomBanner); ?></p>
     </footer>
 </div>
+
 </body>
 </html>
