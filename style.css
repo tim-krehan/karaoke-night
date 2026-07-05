@@ -1,4 +1,4 @@
-/* style.css - 90s Yankees Karaoke Style */
+/* style.css - 90s Yankees Karaoke Style with mobile optimization */
 
 body.yankees-body {
     background: linear-gradient(90deg, #001f3f, #003366, #001f3f);
@@ -44,6 +44,7 @@ body.yankees-body {
     text-decoration: none;
     border: 3px solid #ff4136;
     font-weight: bold;
+    display: inline-block;
 }
 
 .nav-link:hover,
@@ -65,22 +66,19 @@ body.yankees-body {
 .search-section,
 .table-section,
 .admin-section,
-.login-section,
-.rate-section {
+.login-section {
     margin-bottom: 25px;
 }
 
 .search-form,
-.login-form,
-.rate-form {
+.login-form {
     display: flex;
     flex-direction: column;
     gap: 10px;
 }
 
 .search-label,
-.login-label,
-.rate-label {
+.login-label {
     font-size: 1.1em;
 }
 
@@ -132,9 +130,13 @@ body.yankees-body {
     font-size: 0.9em;
 }
 
-.btn-login,
-.btn-rate {
+.btn-login {
     align-self: flex-start;
+}
+
+.table-wrapper {
+    width: 100%;
+    overflow-x: auto;
 }
 
 .song-table {
@@ -142,6 +144,7 @@ body.yankees-body {
     border-collapse: collapse;
     margin-top: 10px;
     background-color: #001f3f;
+    min-width: 400px;
 }
 
 .song-table th,
@@ -215,4 +218,44 @@ body.yankees-body {
     0% { opacity: 1; }
     50% { opacity: 0.3; }
     100% { opacity: 1; }
+}
+
+/* Mobile optimization */
+@media (max-width: 600px) {
+    .page-container {
+        margin: 10px;
+        padding: 10px;
+        border-width: 5px;
+    }
+
+    .title {
+        font-size: 1.8em;
+    }
+
+    .section-title {
+        font-size: 1.4em;
+    }
+
+    .nav-link,
+    .nav-link-inline {
+        padding: 4px 8px;
+        margin: 2px;
+        font-size: 0.9em;
+    }
+
+    .song-table th,
+    .song-table td {
+        padding: 6px;
+        font-size: 0.9em;
+    }
+
+    .btn {
+        padding: 8px 10px;
+        font-size: 0.9em;
+    }
+
+    .yankees-marquee {
+        font-size: 0.9em;
+        padding: 4px;
+    }
 }

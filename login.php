@@ -1,4 +1,6 @@
 <?php
+// login.php - Admin login page
+
 session_start();
 
 // Already logged in → redirect
@@ -20,17 +22,21 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $error = 'Falsches Passwort ✨';
     }
 }
+
+$topBanner = getenv('TOP_BANNER_TEXT') ?: '✨ ADMIN LOGIN ✨ ONLY TRUE KARAOKE CAPTAINS MAY ENTER ✨';
+$bottomBanner = getenv('BOTTOM_BANNER_TEXT') ?: '✨ Passwortgeschütztes Admin-Panel ✨ ENV: ADMIN_PASSWORD ✨';
 ?>
 <!DOCTYPE html>
 <html lang="de">
 <head>
     <meta charset="UTF-8">
     <title>Admin Login ✨</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="style.css">
 </head>
 <body class="yankees-body">
 <marquee class="yankees-marquee" behavior="scroll" direction="left">
-    ✨ ADMIN LOGIN ✨ ONLY TRUE KARAOKE CAPTAINS MAY ENTER ✨
+    <?php echo htmlspecialchars($topBanner); ?>
 </marquee>
 
 <div class="page-container">
@@ -56,7 +62,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     </main>
 
     <footer class="footer">
-        <p>✨ Passwortgeschütztes Admin-Panel ✨ ENV: ADMIN_PASSWORD ✨</p>
+        <p><?php echo htmlspecialchars($bottomBanner); ?></p>
     </footer>
 </div>
 </body>

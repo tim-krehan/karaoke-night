@@ -14,8 +14,9 @@ WORKDIR /var/www/html
 # Copy project files
 COPY . /var/www/html
 
-# Set environment variable for admin password (can be overridden by docker-compose)
+# Environment variables (can be overridden by docker-compose)
 ENV ADMIN_PASSWORD=changeme
+ENV TOP_BANNER_TEXT="✨ WELCOME TO THE ULTIMATE 90s YANKEES KARAOKE REQUEST PAGE ✨ REQUEST YOUR SONGS NOW ✨"
+ENV BOTTOM_BANNER_TEXT="✨ 90s Yankees Karaoke Vibes ✨ Only Emojis, No Images ✨"
 
-# Expose port 80 (handled by docker-compose)
 EXPOSE 80

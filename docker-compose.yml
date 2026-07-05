@@ -8,5 +8,7 @@ services:
       - "8080:80"
     environment:
       ADMIN_PASSWORD: "supersecret"
+      TOP_BANNER_TEXT: "✨ CUSTOM TOP BANNER ✨ LIVE KARAOKE REQUESTS ✨"
+      BOTTOM_BANNER_TEXT: "✨ CUSTOM BOTTOM BANNER ✨ Powered by JSON & Emojis ✨"
     volumes:
       - .:/var/www/html
