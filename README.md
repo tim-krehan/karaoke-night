@@ -1,31 +1,55 @@
-# Karaoke Request Night – Yankees 90s Webprojekt
+# Karaoke Request Webprojekt ✨
 
 ## Projektbeschreibung
 
-Dieses Projekt ist eine einfache, aber bewusst retro gestaltete Webanwendung, um Song-Requests für einen Karaoke-Abend zu sammeln und zu verwalten.  
-Die Seite bietet:
+Dieses Projekt ist eine vollständige Karaoke‑Request‑Webseite im 90er‑Yankees‑Style.  
+Es besteht aus:
 
-- Ein öffentliches Formular für Gäste, um Songs zu wünschen.
-- Eine Übersicht aller Requests, sortiert nach Anzahl der Wünsche.
-- Ein Admin-Panel, in dem der Status und die Bestätigung einzelner Songs gepflegt werden können.
+- **Request‑Seite (`index.php`)** – öffentliche Seite mit Suchfeld, Tabelle und Request‑Button.
+- **Admin‑Panel (`admin.php`)** – passwortgeschütztes Backend zur Verwaltung der Songdaten.
+- **Login‑Seite (`login.php`)** – Passwort‑Login für Admin.
 
-Backend: PHP ohne Framework  
-Datenspeicher: JSON-Datei `songs.json`  
-Frontend: HTML + CSS im Yankees-90er-Style (Blau/Rot/Weiß, dicke Rahmen, blinkende Elemente, animierte Sterne).
+Die Seite nutzt starke Farben, dicke Rahmen, blinkende Elemente, Retro‑Fonts und Side‑Scrolling‑Texte.  
+Statt Bildern werden ausschließlich Emojis verwendet.
 
 ---
 
-## Dateistruktur
+## Request‑Seite
 
-```text
-/project-root
-├── index.php          # Hauptseite mit Request-Formular und Song-Tabelle
-├── api.php            # Backend-Endpoint für neue Requests
-├── admin.php          # Admin-Oberfläche zur Status-/Confirmed-Pflege
-├── style.css          # Yankees-90er-Style CSS
-├── songs.json         # JSON-Datenspeicher für Songs
-├── Dockerfile         # Container-Build für php:8.2-apache
-├── docker-compose.yml # Einfacher Webservice mit Port-Mapping 8080:80
-├── README.md          # Dieses Dokument
-└── assets/
-    └── stars.gif      # Animiertes GIF mit Sternen für Retro-Optik
+- Fuzzy‑Search (case‑insensitive)
+- Tabelle mit:
+  - Songtitel
+  - Interpret
+  - Status
+- Wenn kein Ergebnis gefunden wird:
+  - Button zum Erstellen eines neuen Eintrags
+
+---
+
+## Admin‑Panel
+
+- Passwortgeschützt (ENV: `ADMIN_PASSWORD`)
+- Admin kann:
+  - Titel ändern
+  - Interpret ändern
+  - Count ändern
+  - Status ändern (`ok` / `requested`)
+
+---
+
+## Login‑Seite
+
+- Passwort‑Login
+- Bereits eingeloggte Admins werden automatisch weitergeleitet
+
+---
+
+## JSON‑Struktur
+
+```json
+{
+  "title": "Songtitel",
+  "interpret": "Interpretname",
+  "count": 1,
+  "status": "requested"
+}

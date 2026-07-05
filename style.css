@@ -1,253 +1,218 @@
-/* Yankees 90s Style – loud colors, thick borders, blinking stuff */
+/* style.css - 90s Yankees Karaoke Style */
 
-body.yankees-bg {
-    background: linear-gradient(135deg, #001f3f, #003366);
+body.yankees-body {
+    background: linear-gradient(90deg, #001f3f, #003366, #001f3f);
     color: #ffffff;
-    font-family: "Arial Black", Impact, "Helvetica Neue", Arial, sans-serif;
+    font-family: "Arial Black", Impact, sans-serif;
     margin: 0;
     padding: 0;
 }
 
-.header-banner,
-.footer-banner {
-    background: #0b1a3a;
-    border-bottom: 8px solid #ff0000;
-    border-top: 8px solid #ffffff;
-    text-align: center;
-    padding: 10px 0;
-    box-shadow: 0 0 15px #000000;
-}
-
-.footer-banner {
-    border-top: 8px solid #ff0000;
-    border-bottom: 8px solid #ffffff;
-    margin-top: 30px;
-    font-size: 0.9rem;
-}
-
-.title-text {
-    font-size: 2.8rem;
-    letter-spacing: 4px;
-    text-transform: uppercase;
-    color: #ffffff;
-    text-shadow: 3px 3px 0 #ff0000, -3px -3px 0 #ffffff;
-    margin: 0;
-}
-
-/* Original GIF styling (kept for compatibility) */
-.stars-gif {
-    width: 80px;
-    height: 80px;
-    margin: 0 10px;
-    border: 4px solid #ffffff;
-    box-shadow: 0 0 10px #ff0000;
-}
-
-/* Pixel-style sparkle replacement */
-.pixel-sparkle {
-    display: inline-block;
-    font-size: 28px;               /* bigger pixel look */
-    line-height: 1;
-    text-align: center;
-    padding: 4px 6px;
-    border: 4px solid #ffffff;
-    background: #001133;
-    box-shadow: 0 0 10px #ff0000;
-    image-rendering: pixelated;    /* pixel effect */
-    transform: translateY(4px);    /* aligns like <img> */
-}
-
-/* Sparkle glow animation */
-.sparkle {
-    filter: drop-shadow(0 0 6px #ffcc00) drop-shadow(0 0 12px #ffffff);
-    animation: sparklePulse 1.5s infinite;
-}
-
-@keyframes sparklePulse {
-    0% { filter: drop-shadow(0 0 4px #ffcc00); }
-    50% { filter: drop-shadow(0 0 12px #ffffff); }
-    100% { filter: drop-shadow(0 0 4px #ffcc00); }
-}
-
-.main-container {
+.page-container {
     max-width: 1000px;
     margin: 20px auto;
+    border: 8px solid #ff4136;
+    background-color: #000033;
+    box-shadow: 0 0 20px #ffffff;
     padding: 20px;
-    border: 10px double #ffffff;
-    background: #001133;
-    box-shadow: 0 0 25px #000000;
+}
+
+.header {
+    text-align: center;
+    border-bottom: 4px solid #ffffff;
+    padding-bottom: 10px;
+    margin-bottom: 20px;
+}
+
+.title {
+    font-size: 2.5em;
+    text-transform: uppercase;
+    color: #ffdc00;
+    text-shadow: 3px 3px #001f3f;
+}
+
+.nav {
+    margin-top: 10px;
+}
+
+.nav-link,
+.nav-link-inline {
+    color: #ffffff;
+    background-color: #0074d9;
+    padding: 5px 10px;
+    margin: 0 5px;
+    text-decoration: none;
+    border: 3px solid #ff4136;
+    font-weight: bold;
+}
+
+.nav-link:hover,
+.nav-link-inline:hover {
+    background-color: #ff4136;
+    border-color: #0074d9;
+    cursor: pointer;
 }
 
 .section-title {
-    font-size: 1.8rem;
-    text-transform: uppercase;
-    color: #ffcc00;
-    text-shadow: 2px 2px 0 #000000;
-    margin-bottom: 10px;
+    font-size: 1.8em;
+    color: #ffdc00;
+    text-shadow: 2px 2px #001f3f;
+    border-bottom: 3px solid #ffffff;
+    padding-bottom: 5px;
+    margin-bottom: 15px;
 }
 
-.request-section,
+.search-section,
 .table-section,
-.admin-section {
-    margin-bottom: 30px;
-    padding: 15px;
-    border: 6px solid #ff0000;
-    background: #002244;
-    box-shadow: inset 0 0 10px #000000;
+.admin-section,
+.login-section,
+.rate-section {
+    margin-bottom: 25px;
 }
 
-.request-form .form-row {
-    margin-bottom: 10px;
+.search-form,
+.login-form,
+.rate-form {
     display: flex;
     flex-direction: column;
+    gap: 10px;
 }
 
-.request-form label {
-    font-weight: bold;
-    margin-bottom: 4px;
-    color: #ffffff;
+.search-label,
+.login-label,
+.rate-label {
+    font-size: 1.1em;
 }
 
-.request-form input[type="text"],
-.request-form input[type="password"] {
+.search-input,
+.login-input,
+.rate-input,
+.admin-input {
     padding: 8px;
-    border: 4px solid #ffffff;
-    background: #000022;
+    border: 4px solid #ff4136;
+    background-color: #001f3f;
     color: #ffffff;
-    font-family: "Arial Black", Impact, Arial, sans-serif;
+    font-family: "Arial Black", Impact, sans-serif;
 }
 
-.request-form input[type="text"]:focus,
-.request-form input[type="password"]:focus {
+.search-input:focus,
+.login-input:focus,
+.rate-input:focus,
+.admin-input:focus {
     outline: none;
-    border-color: #ff0000;
-    box-shadow: 0 0 10px #ff0000;
+    border-color: #ffdc00;
+    box-shadow: 0 0 10px #ffdc00;
 }
 
-.required {
-    color: #ff0000;
-}
-
-.btn-submit,
-.btn-admin-update {
-    padding: 10px 20px;
-    background: #ff0000;
-    color: #ffffff;
+.btn {
+    padding: 10px 15px;
     border: 4px solid #ffffff;
-    font-family: "Arial Black", Impact, Arial, sans-serif;
+    background-color: #ff4136;
+    color: #ffffff;
+    font-family: "Arial Black", Impact, sans-serif;
     text-transform: uppercase;
     cursor: pointer;
-    text-shadow: 1px 1px 0 #000000;
-    box-shadow: 0 0 10px #000000;
+    animation: blink 1s infinite;
 }
 
-.btn-submit:hover,
-.btn-admin-update:hover {
-    background: #ffcc00;
-    color: #000000;
-    border-color: #ff0000;
+.btn:hover {
+    background-color: #0074d9;
+    border-color: #ffdc00;
 }
 
-.admin-link,
-.admin-back-link {
+.btn-search {
+    align-self: flex-start;
+}
+
+.btn-request {
     margin-top: 10px;
 }
 
-.admin-link a,
-.admin-back-link a {
-    color: #ffcc00;
-    font-weight: bold;
-    text-decoration: none;
-    border-bottom: 2px dashed #ff0000;
+.btn-admin-update {
+    font-size: 0.9em;
 }
 
-.admin-link a:hover,
-.admin-back-link a:hover {
-    color: #ffffff;
-    border-bottom-style: solid;
+.btn-login,
+.btn-rate {
+    align-self: flex-start;
 }
 
-/* Table styling */
-
-.songs-table {
+.song-table {
     width: 100%;
     border-collapse: collapse;
     margin-top: 10px;
-    font-size: 0.95rem;
+    background-color: #001f3f;
 }
 
-.songs-table th,
-.songs-table td {
+.song-table th,
+.song-table td {
     border: 3px solid #ffffff;
-    padding: 6px 8px;
+    padding: 8px;
     text-align: left;
 }
 
-.songs-table th {
-    background: #003366;
-    color: #ffcc00;
-    text-transform: uppercase;
-    font-family: "Arial Black", Impact, Arial, sans-serif;
+.song-table th {
+    background-color: #0074d9;
+    color: #ffffff;
 }
 
-.songs-table tbody tr:nth-child(odd) {
-    background: #001a33;
+.song-table tr:nth-child(even) {
+    background-color: #000022;
 }
 
-.songs-table tbody tr:nth-child(even) {
-    background: #002244;
+.song-table tr:nth-child(odd) {
+    background-color: #000044;
 }
 
-.count-cell {
+.admin-table input,
+.admin-table select {
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.no-results {
     text-align: center;
-    font-weight: bold;
-    color: #ffcc00;
+    font-size: 1.1em;
+    color: #ffdc00;
 }
 
-/* Admin inline form */
-
-.admin-form-inline {
-    display: flex;
-    flex-direction: column;
-    gap: 4px;
-}
-
-.admin-form-inline label {
-    font-size: 0.8rem;
+.info-message {
+    background-color: #0074d9;
+    border: 3px solid #ffdc00;
+    padding: 10px;
+    margin-top: 10px;
     color: #ffffff;
 }
 
-.admin-form-inline select {
-    padding: 4px;
+.error-message {
+    background-color: #ff4136;
     border: 3px solid #ffffff;
-    background: #000022;
+    padding: 10px;
+    margin-top: 10px;
     color: #ffffff;
-    font-family: "Arial Black", Impact, Arial, sans-serif;
+}
+
+.footer {
+    margin-top: 20px;
+    border-top: 4px solid #ffffff;
+    padding-top: 10px;
+    text-align: center;
+    font-size: 0.9em;
+}
+
+/* Marquee style */
+.yankees-marquee {
+    background-color: #ff4136;
+    color: #ffffff;
+    font-size: 1.1em;
+    padding: 5px;
+    border-bottom: 4px solid #ffffff;
+    font-family: "Arial Black", Impact, sans-serif;
 }
 
 /* Blink animation */
-
-@keyframes blinkAnimation {
+@keyframes blink {
     0% { opacity: 1; }
-    25% { opacity: 0.3; }
-    50% { opacity: 1; }
-    75% { opacity: 0.3; }
+    50% { opacity: 0.3; }
     100% { opacity: 1; }
-}
-
-.blink {
-    animation: blinkAnimation 1s infinite;
-}
-
-/* Extra retro flair */
-
-.no-songs {
-    font-style: italic;
-    color: #ffcc00;
-    text-shadow: 1px 1px 0 #000000;
-}
-
-.admin-body .admin-header {
-    border-bottom-color: #ffcc00;
-    border-top-color: #ffcc00;
 }

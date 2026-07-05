@@ -1,121 +1,171 @@
 <?php
-// Ensure songs.json exists
+// index.php - Public request page
+
 $songsFile = __DIR__ . '/songs.json';
-if (!file_exists($songsFile)) {
-    file_put_contents($songsFile, json_encode([], JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE));
+
+function loadSongs($file)
+{
+    if (!file_exists($file)) {
+        file_put_contents($file, json_encode([], JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE));
+    }
+    $json = file_get_contents($file);
+    $data = json_decode($json, true);
+    if (!is_array($data)) {
+        $data = [];
+    }
+    return $data;
 }
 
-// Load songs
-$songs = json_decode(file_get_contents($songsFile), true);
-if (!is_array($songs)) {
-    $songs = [];
+function saveSongs($file, $songs)
+{
+    file_put_contents($file, json_encode($songs, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE));
 }
 
-// Sort by count desc
-usort($songs, function ($a, $b) {
-    return ($b['count'] ?? 0) <=> ($a['count'] ?? 0);
-});
+function fuzzyMatch($needle, $haystack)
+{
+    // Case-insensitive fuzzy search
+    $needle = mb_strtolower(trim($needle));
+    $haystack = mb_strtolower(trim($haystack));
+
+    if ($needle === '') {
+        return true;
+    }
+
+    // direct substring match
+    if (strpos($haystack, $needle) !== false) {
+        return true;
+    }
+
+    // levenshtein fuzzy match
+    $distance = levenshtein($needle, $haystack);
+    $threshold = max(1, (int)floor(strlen($needle) / 3));
+
+    return $distance <= $threshold;
+}
+
+$songs = loadSongs($songsFile);
+$search = isset($_GET['search']) ? trim($_GET['search']) : '';
+$createdNew = false;
+
+// Handle "request new song"
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['request_title'])) {
+    $newTitle = trim($_POST['request_title']);
+    if ($newTitle !== '') {
+        $exists = false;
+        foreach ($songs as &$song) {
+            if (mb_strtolower($song['title']) === mb_strtolower($newTitle)) {
+                $song['count'] = (int)$song['count'] + 1;
+                $exists = true;
+                break;
+            }
+        }
+        unset($song);
+
+        if (!$exists) {
+            $songs[] = [
+                'title' => $newTitle,
+                'interpret' => '',
+                'count' => 1,
+                'status' => 'requested',
+            ];
+            $createdNew = true;
+        }
+        saveSongs($songsFile, $songs);
+        $search = $newTitle;
+    }
+}
+
+// Filter songs
+$filteredSongs = [];
+if ($search !== '') {
+    foreach ($songs as $song) {
+        if (fuzzyMatch($search, $song['title']) || fuzzyMatch($search, $song['interpret'])) {
+            $filteredSongs[] = $song;
+        }
+    }
+} else {
+    $filteredSongs = $songs;
+}
+
+$noResults = ($search !== '' && count($filteredSongs) === 0);
 ?>
 <!DOCTYPE html>
 <html lang="de">
 <head>
     <meta charset="UTF-8">
-    <title>Karaoke Request Night</title>
+    <title>Karaoke Requests ✨</title>
     <link rel="stylesheet" href="style.css">
 </head>
-<body class="yankees-bg">
-    <!-- Top scrolling banner -->
-    <marquee behavior="scroll" direction="left" scrollamount="9"
-            style="background:#ff0000; color:#ffffff; font-family:'Arial Black'; font-size:1.4rem; padding:10px; border:4px solid #ffffff;">
-        ★ REQUEST YOUR FAVORITE SONGS ★ MAKE THE NIGHT LEGENDARY ★
-    </marquee>
+<body class="yankees-body">
+<marquee class="yankees-marquee" behavior="scroll" direction="left">
+    ✨ WELCOME TO THE ULTIMATE 90s YANKEES KARAOKE REQUEST PAGE ✨ REQUEST YOUR SONGS NOW ✨
+</marquee>
 
-    <header class="header-banner">
-        <div class="pixel-sparkle sparkle">✨</div>
-        <h1 class="title-text blink">KARAOKE REQUEST NIGHT</h1>
-        <div class="pixel-sparkle sparkle">✨</div>
+<div class="page-container">
+    <header class="header">
+        <h1 class="title">🎤 Karaoke Request Zone ✨</h1>
+        <nav class="nav">
+            <a href="login.php" class="nav-link">Admin Login 🔐</a>
+        </nav>
     </header>
 
-    <main class="main-container">
-        <section class="request-section">
-            <h2 class="section-title">Song-Request einreichen</h2>
-            <form action="api.php" method="post" class="request-form">
-                <div class="form-row">
-                    <label for="title">Songtitel <span class="required">*</span></label>
-                    <input type="text" id="title" name="title" required>
-                </div>
-                <div class="form-row">
-                    <label for="requested_by">Sängername (optional)</label>
-                    <input type="text" id="requested_by" name="requested_by">
-                </div>
-                <div class="form-row">
-                    <label for="interpret">Interpret (optional)</label>
-                    <input type="text" id="interpret" name="interpret">
-                </div>
-                <div class="form-row">
-                    <button type="submit" class="btn-submit">Request abschicken!</button>
-                </div>
+    <main>
+        <section class="search-section">
+            <h2 class="section-title">Finde deinen Song 🎶</h2>
+            <form method="get" action="index.php" class="search-form">
+                <label for="search" class="search-label">Songtitel oder Interpret:</label>
+                <input type="text" id="search" name="search" value="<?php echo htmlspecialchars($search); ?>" class="search-input">
+                <button type="submit" class="btn btn-search">Suchen ✨</button>
             </form>
-            <p class="admin-link">
-                <a href="admin.php">Zur Admin-Ansicht &raquo;</a>
-            </p>
+            <?php if ($createdNew): ?>
+                <p class="info-message">✨ Dein Song wurde hinzugefügt und angefragt! ✨</p>
+            <?php endif; ?>
         </section>
 
-        <!-- Mid-page sparkle marquee -->
-        <marquee behavior="alternate" direction="right" scrollamount="7"
-                style="background:#0033aa; color:#ffcc00; font-family:'Impact'; font-size:1.3rem; padding:10px; border:4px dashed #ffffff; margin:20px 0;">
-            ✦ ✦ ✦ ADD YOUR SONG — ADD YOUR VOICE — ADD YOUR MAGIC ✦ ✦ ✦
-        </marquee>
-
-
         <section class="table-section">
-            <h2 class="section-title">Aktuelle Song-Requests</h2>
-            <?php if (empty($songs)): ?>
-                <p class="no-songs">Noch keine Requests – sei der erste!</p>
-            <?php else: ?>
-                <table class="songs-table">
-                    <thead>
+            <h2 class="section-title">Aktuelle Karaoke-Liste 📜</h2>
+            <table class="song-table">
+                <thead>
+                <tr>
+                    <th>Songtitel 🎵</th>
+                    <th>Interpret 🎤</th>
+                    <th>Status ✅</th>
+                </tr>
+                </thead>
+                <tbody>
+                <?php if (count($filteredSongs) > 0): ?>
+                    <?php foreach ($filteredSongs as $song): ?>
                         <tr>
-                            <th>Titel</th>
-                            <th>Interpret</th>
-                            <th>Anzahl</th>
-                            <th>Status</th>
-                            <th>Confirmed</th>
-                            <th>Requested By</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                    <?php foreach ($songs as $song): ?>
-                        <tr>
-                            <td><?php echo htmlspecialchars($song['title'] ?? '', ENT_QUOTES, 'UTF-8'); ?></td>
-                            <td><?php echo htmlspecialchars($song['interpret'] ?? '', ENT_QUOTES, 'UTF-8'); ?></td>
-                            <td class="count-cell"><?php echo (int)($song['count'] ?? 0); ?></td>
-                            <td><?php echo htmlspecialchars($song['status'] ?? 'pending', ENT_QUOTES, 'UTF-8'); ?></td>
-                            <td><?php echo !empty($song['confirmed']) ? 'true' : 'false'; ?></td>
-                            <td>
-                                <?php
-                                if (!empty($song['requested_by']) && is_array($song['requested_by'])) {
-                                    echo htmlspecialchars(implode(', ', $song['requested_by']), ENT_QUOTES, 'UTF-8');
-                                }
-                                ?>
-                            </td>
+                            <td><?php echo htmlspecialchars($song['title']); ?></td>
+                            <td><?php echo htmlspecialchars($song['interpret']); ?></td>
+                            <td><?php echo htmlspecialchars($song['status']); ?></td>
                         </tr>
                     <?php endforeach; ?>
-                    </tbody>
-                </table>
-            <?php endif; ?>
+                <?php else: ?>
+                    <tr>
+                        <td colspan="3" class="no-results">
+                            Keine Songs gefunden für: <strong><?php echo htmlspecialchars($search); ?></strong><br>
+                            <?php if ($noResults): ?>
+                                <form method="post" action="index.php" class="request-form">
+                                    <input type="hidden" name="request_title" value="<?php echo htmlspecialchars($search); ?>">
+                                    <button type="submit" class="btn btn-request">
+                                        ✨ Diesen Song anfragen! ✨
+                                    </button>
+                                </form>
+                            <?php else: ?>
+                                Bitte gib einen Suchbegriff ein. ✨
+                            <?php endif; ?>
+                        </td>
+                    </tr>
+                <?php endif; ?>
+                </tbody>
+            </table>
         </section>
     </main>
 
-    <!-- Bottom marquee -->
-    <marquee behavior="scroll" direction="right" scrollamount="10"
-            style="background:#001a33; color:#ffffff; font-family:'Arial Black'; font-size:1.2rem; padding:10px; border:4px solid #ff0000;">
-        ★ THANK YOU FOR YOUR REQUEST ★ LET THE STARS SHINE TONIGHT ★
-    </marquee>
-
-
-    <footer class="footer-banner">
-        <p>© 1996–2026 Karaoke Yankees Night – Powered by PHP & JSON</p>
+    <footer class="footer">
+        <p>✨ 90s Yankees Karaoke Vibes ✨ Only Emojis, No Images ✨</p>
     </footer>
+</div>
 </body>
 </html>

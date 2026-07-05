@@ -1,12 +1,12 @@
 version: "3.8"
 
 services:
-  web:
+  karaoke-web:
     build: .
+    container_name: karaoke-web
     ports:
       - "8080:80"
     environment:
-      ADMIN_PASSWORD: "changeme123"
+      ADMIN_PASSWORD: "supersecret"
     volumes:
       - .:/var/www/html
-    restart: unless-stopped

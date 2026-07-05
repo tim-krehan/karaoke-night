@@ -1,18 +1,23 @@
 <?php
 session_start();
 
-// Load admin password from environment variable
-$adminPassword = getenv('ADMIN_PASSWORD');
+// Already logged in → redirect
+if (isset($_SESSION['is_admin']) && $_SESSION['is_admin'] === true) {
+    header('Location: admin.php');
+    exit;
+}
+
+$adminPassword = getenv('ADMIN_PASSWORD') ?: 'changeme';
+$error = '';
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $password = isset($_POST['password']) ? trim($_POST['password']) : '';
-
-    if ($adminPassword !== false && $password === $adminPassword) {
+    $password = $_POST['password'] ?? '';
+    if ($password === $adminPassword) {
         $_SESSION['is_admin'] = true;
         header('Location: admin.php');
         exit;
     } else {
-        $error = "Falsches Passwort!";
+        $error = 'Falsches Passwort ✨';
     }
 }
 ?>
@@ -20,42 +25,39 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <html lang="de">
 <head>
     <meta charset="UTF-8">
-    <title>Admin Login</title>
+    <title>Admin Login ✨</title>
     <link rel="stylesheet" href="style.css">
 </head>
-<body class="yankees-bg">
+<body class="yankees-body">
+<marquee class="yankees-marquee" behavior="scroll" direction="left">
+    ✨ ADMIN LOGIN ✨ ONLY TRUE KARAOKE CAPTAINS MAY ENTER ✨
+</marquee>
 
-    <!-- Top scrolling banner -->
-    <marquee behavior="scroll" direction="left" scrollamount="8"
-             style="background:#ff0000; color:#ffffff; font-family:'Arial Black'; font-size:1.4rem; padding:10px; border:4px solid #ffffff;">
-        ★ WELCOME TO THE KARAOKE ADMIN ZONE ★ PLEASE ENTER YOUR PASSWORD ★
-    </marquee>
+<div class="page-container">
+    <header class="header">
+        <h1 class="title">🔐 Admin Login ✨</h1>
+        <nav class="nav">
+            <a href="index.php" class="nav-link">Zur Request-Seite 🎤</a>
+        </nav>
+    </header>
 
-    <div class="main-container">
-        <h1 class="section-title">Admin Login</h1>
+    <main>
+        <section class="login-section">
+            <h2 class="section-title">Passwort eingeben 🔑</h2>
+            <?php if ($error): ?>
+                <p class="error-message"><?php echo htmlspecialchars($error); ?></p>
+            <?php endif; ?>
+            <form method="post" action="login.php" class="login-form">
+                <label for="password" class="login-label">Admin-Passwort:</label>
+                <input type="password" id="password" name="password" class="login-input">
+                <button type="submit" class="btn btn-login">Login ✨</button>
+            </form>
+        </section>
+    </main>
 
-        <?php if (!empty($error)): ?>
-            <p style="color: #ff0000; font-weight: bold;"><?php echo htmlspecialchars($error); ?></p>
-        <?php endif; ?>
-
-        <form action="login.php" method="post" class="request-form">
-            <div class="form-row">
-                <label for="password">Admin Passwort</label>
-                <input type="password" id="password" name="password" required>
-            </div>
-            <button type="submit" class="btn-submit">Login</button>
-        </form>
-
-        <p class="admin-back-link" style="margin-top:20px;">
-            <a href="index.php">&laquo; Zurück zur Karaoke‑Request‑Seite</a>
-        </p>
-    </div>
-
-    <!-- Bottom scrolling banner -->
-    <marquee behavior="alternate" direction="right" scrollamount="10"
-             style="background:#0033aa; color:#ffcc00; font-family:'Impact'; font-size:1.3rem; padding:10px; border:4px dashed #ffffff; margin-top:20px;">
-        ★ CLICK ABOVE TO RETURN TO THE REQUEST PAGE ★
-    </marquee>
-
+    <footer class="footer">
+        <p>✨ Passwortgeschütztes Admin-Panel ✨ ENV: ADMIN_PASSWORD ✨</p>
+    </footer>
+</div>
 </body>
 </html>
