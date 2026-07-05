@@ -1,14 +1,1 @@
-[
-    {
-        "title": "test",
-        "interpret": "dunno man",
-        "count": 1,
-        "status": "ok"
-    },
-    {
-        "title": "test another one",
-        "interpret": "",
-        "count": 1,
-        "status": "requested"
-    }
-]
+[]
