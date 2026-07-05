@@ -31,12 +31,10 @@ function fuzzyMatch($needle, $haystack)
         return true;
     }
 
-    // direct substring match
     if (strpos($haystack, $needle) !== false) {
         return true;
     }
 
-    // levenshtein fuzzy match
     $distance = levenshtein($needle, $haystack);
     $threshold = max(1, (int)floor(strlen($needle) / 3));
 
@@ -68,10 +66,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['request_title'])) {
                 'count' => 1,
                 'status' => 'requested',
             ];
-            $createdNew = true;
         }
+
         saveSongs($songsFile, $songs);
-        $search = $newTitle;
+
+        // NEW BEHAVIOR:
+        // Reset search → show full table
+        $search = '';
+        $createdNew = true;
     }
 }
 
@@ -117,8 +119,11 @@ $noResults = ($search !== '' && count($filteredSongs) === 0);
                 <input type="text" id="search" name="search" value="<?php echo htmlspecialchars($search); ?>" class="search-input">
                 <button type="submit" class="btn btn-search">Suchen ✨</button>
             </form>
+
             <?php if ($createdNew): ?>
-                <p class="info-message">✨ Dein Song wurde hinzugefügt und angefragt! ✨</p>
+                <p class="info-message">
+                    ✨ Song erfolgreich hinzugefügt! Die gesamte Liste wird angezeigt. ✨
+                </p>
             <?php endif; ?>
         </section>
 
