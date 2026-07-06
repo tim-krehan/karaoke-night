@@ -26,7 +26,7 @@ $bottomBanner = getenv('BOTTOM_BANNER_TEXT') ?: '✨ Passwortgeschütztes Admin-
 <head>
     <meta charset="UTF-8">
     <title>Admin Login ✨</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <link rel="stylesheet" href="style.css">
 </head>
 <body class="yankees-body">

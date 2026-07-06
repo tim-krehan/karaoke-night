@@ -46,7 +46,7 @@ $bottomBanner = getenv('BOTTOM_BANNER_TEXT') ?: '✨ Admin Power ✨ Manage Song
 <head>
     <meta charset="UTF-8">
     <title>Admin Panel ✨</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <link rel="stylesheet" href="style.css">
 </head>
 <body class="yankees-body">
@@ -87,7 +87,7 @@ $bottomBanner = getenv('BOTTOM_BANNER_TEXT') ?: '✨ Admin Power ✨ Manage Song
                         <?php foreach ($songs as $i => $song): ?>
                             <tr>
                                 <form method="post">
-                                    <td data-label="#"> <?php echo $i; ?>
+                                    <td data-label="#"><?php echo $i; ?>
                                         <input type="hidden" name="index" value="<?php echo $i; ?>">
                                     </td>
 

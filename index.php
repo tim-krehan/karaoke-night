@@ -57,7 +57,7 @@ $bottomBanner = getenv('BOTTOM_BANNER_TEXT') ?: '✨ 90s Yankees Karaoke Vibes �
 <head>
     <meta charset="UTF-8">
     <title>Karaoke Requests ✨</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <link rel="stylesheet" href="style.css">
 </head>
 <body class="yankees-body">
